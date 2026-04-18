@@ -1,12 +1,16 @@
-# Created by https://www.toptal.com/developers/gitignore/api/vuejs
-# Edit at https://www.toptal.com/developers/gitignore?templates=vuejs
+# v0 sandbox internal files
+__v0_runtime_loader.js
+__v0_devtools.tsx
+__v0_jsx-dev-runtime.ts
+.snowflake/
+.v0-trash/
+.vercel/
+next.user-config.*
 
-### Vuejs ###
-# Recommended template: Node.gitignore
+# Environment variables
+.env*.local
 
-node_modules/
-dist/
-npm-debug.log
-yarn-error.log
-
-# End of https://www.toptal.com/developers/gitignore/api/vuejs
+# Common ignores
+node_modules
+.next/
+.DS_Store
