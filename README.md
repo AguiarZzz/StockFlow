@@ -49,8 +49,8 @@ npm run dev
 
 Frontend rodando em:
 
-http://localhost:5173
-Banco de Dados
+http://localhost:5173 
+Banco de Dados 
 Migrations
 
 Para gerar e aplicar migrations:
