@@ -1,74 +1,88 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import BaseModal from '@/components/ui/BaseModal.vue'
-import BaseInput from '@/components/ui/BaseInput.vue'
-import BaseSelect from '@/components/ui/BaseSelect.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
-import type { Product } from '@/types'
+import { ref, watch } from "vue";
+import BaseModal from "@/components/ui/BaseModal.vue";
+import BaseInput from "@/components/ui/BaseInput.vue";
+import BaseSelect from "@/components/ui/BaseSelect.vue";
+import BaseButton from "@/components/ui/BaseButton.vue";
+import type { Product } from "@/types";
 
 const props = defineProps<{
-  open: boolean
-  product: Product | null
-}>()
+  open: boolean;
+  product: Product | null;
+}>();
 
-const emit = defineEmits(['close', 'submit'])
+const emit = defineEmits(["close", "submit"]);
 
-const movementType = ref<'IN' | 'OUT'>('IN')
-const quantity = ref<number>(1)
-const isSubmitting = ref(false)
-const error = ref('')
+const movementType = ref<"IN" | "OUT">("IN");
+const quantity = ref<number>(1);
+const isSubmitting = ref(false);
+const error = ref("");
 
 const typeOptions = [
-  { value: 'IN', label: 'Entrada (IN)' },
-  { value: 'OUT', label: 'Saída (OUT)' }
-]
+  { value: "IN", label: "Entrada (IN)" },
+  { value: "OUT", label: "Saída (OUT)" },
+];
 
-watch(() => props.open, (isOpen) => {
-  if (isOpen) {
-    movementType.value = 'IN'
-    quantity.value = 1
-    error.value = ''
-  }
-})
+watch(
+  () => props.open,
+  (isOpen) => {
+    if (isOpen) {
+      movementType.value = "IN";
+      quantity.value = 1;
+      error.value = "";
+    }
+  },
+);
 
 const handleSubmit = async () => {
-  if (!props.product) return
+  if (!props.product) return;
 
-  error.value = ''
+  error.value = "";
 
   if (quantity.value <= 0) {
-    error.value = 'Quantidade deve ser maior que zero'
-    return
+    error.value = "Quantidade deve ser maior que zero";
+    return;
   }
 
-  if (movementType.value === 'OUT' && quantity.value > props.product.stock) {
-    error.value = `Estoque insuficiente. Disponível: ${props.product.stock} unidades`
-    return
+  if (movementType.value === "OUT" && quantity.value > props.product.stock) {
+    error.value = `Estoque insuficiente. Disponível: ${props.product.stock} unidades`;
+    return;
   }
 
-  isSubmitting.value = true
+  isSubmitting.value = true;
 
   try {
-    await emit('submit', {
+    await emit("submit", {
       productId: props.product.id,
       type: movementType.value,
-      quantity: quantity.value
-    })
+      quantity: quantity.value,
+    });
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false;
+    console.log("Enviando", {
+      productId: props.product.id,
+      type: movementType.value,
+      quantity: quantity.value,
+    });
   }
-}
+};
 </script>
 
 <template>
-  <BaseModal :open="open" title="Movimentação de Estoque" @close="emit('close')">
+  <BaseModal
+    :open="open"
+    title="Movimentação de Estoque"
+    @close="emit('close')"
+  >
     <div v-if="product" class="space-y-4">
       <!-- Product Info -->
       <div class="rounded-lg bg-secondary p-3">
         <p class="text-sm text-muted-foreground">Produto</p>
         <p class="font-medium text-foreground">{{ product.name }}</p>
         <p class="mt-1 text-sm text-muted-foreground">
-          Estoque atual: <span class="font-medium text-foreground">{{ product.stock }}</span> unidades
+          Estoque atual:
+          <span class="font-medium text-foreground">{{ product.stock }}</span>
+          unidades
         </p>
       </div>
 
@@ -97,11 +111,7 @@ const handleSubmit = async () => {
           >
             Cancelar
           </BaseButton>
-          <BaseButton
-            type="submit"
-            class="flex-1"
-            :loading="isSubmitting"
-          >
+          <BaseButton type="submit" class="flex-1" :loading="isSubmitting">
             Confirmar
           </BaseButton>
         </div>

@@ -13,23 +13,18 @@ export const createProduct = async (req: Request, res: Response) => {
     });
 
     return res.status(201).json(product);
-  } catch (error: any) {
-    return res.status(400).json({
-      message: error.message,
-    });
+  } catch (err: any) {
+    console.error("ERRO NO CREATE:", err);
+    return res.status(400).json({ error: err.message });
   }
 };
 
 export const getProducts = async (req: Request, res: Response) => {
   try {
-    const products = await productService.list();
-
-    return res.status(200).json(products);
-  } catch (error) {
-    console.error("Erro ao buscar produtos:", error);
-
-    return res.status(500).json({
-      message: "Internal server error",
-    });
+    const products = await productService.listWithStock();
+    return res.json(products);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Erro ao buscar produtos" });
   }
 };

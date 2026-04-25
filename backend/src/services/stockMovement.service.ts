@@ -10,35 +10,21 @@ interface CreateStockMovementDTO {
 }
 
 export class StockMovementService {
-  async findByProductId(productId: string) {
-    const movements = await prisma.stockMovement.findMany({
-      where: { productId },
-    });
-
-    let stock = 0;
-
-    for (const movement of movements) {
-      if (movement.type === "IN") {
-        stock += movement.quantity;
-      } else {
-        stock -= movement.quantity;
-      }
-    }
-
-    return stock;
-  }
-
   async getStock(productId: string): Promise<number> {
-    const movements = await prisma.stockMovement.findMany({
+    const movements = await prisma.stockMovement.groupBy({
+      by: ["type"],
       where: { productId },
+      _sum: {
+        quantity: true,
+      },
     });
     let stock = 0;
 
-    for (const movement of movements) {
-      if (movement.type === "IN") {
-        stock += movement.quantity;
+    for (const item of movements) {
+      if (item.type === "IN") {
+        stock += item._sum.quantity || 0;
       } else {
-        stock -= movement.quantity;
+        stock -= item._sum.quantity || 0;
       }
     }
     return stock;
@@ -57,7 +43,7 @@ export class StockMovementService {
     }
 
     const currentStock = await this.getStock(data.productId);
-    if (data.type === "OUT" && data.quantity > currentStock) {
+    if (data.type === MovementType.OUT && data.quantity > currentStock) {
       throw new Error("Insufficient stock for this movement");
     }
 

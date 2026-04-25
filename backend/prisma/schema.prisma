@@ -15,7 +15,7 @@ generator client {
 model Product {
   id        String   @id @default(uuid())
   name      String   @unique
-  price     Float?
+  price     Float
   createdAt DateTime @default(now())
 
   movements StockMovement[]

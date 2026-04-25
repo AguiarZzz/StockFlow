@@ -12,6 +12,8 @@ const router = useRouter()
 const { createProduct } = useProducts()
 const { success, error } = useToast()
 
+console.log("createProduct:", createProduct);
+
 const isSubmitting = ref(false)
 
 const form = reactive({
