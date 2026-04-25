@@ -10,7 +10,8 @@ Gerenciar produtos e seus estoques
 Registrar movimentações de entrada (IN) e saída (OUT)
 Validar regras de negócio (ex: não permitir saída maior que o estoque)
 Servir como projeto de portfólio fullstack
-🛠️ Stack utilizada
+
+Stack utilizada
 Backend
 Node.js
 Express
